@@ -1,12 +1,26 @@
 [
   {
-    "author": "sadasd",
-    "msgbox": "sdf sdgds",
-    "timestamp": "22:47 &nbsp; 2021.3.14"
-  },
-  {
     "author": "anonym",
     "msgbox": "ahoooooj moreeeeeee žaneta",
-    "timestamp": "22:55 &nbsp; 2021.3.14"
+    "timestamp": "22:55 &nbsp; 2021.3.14",
+    "image": "none"
+  },
+  {
+    "author": "sdf",
+    "msgbox": "sdfsdf",
+    "timestamp": "0:11 &nbsp; 2021.3.15",
+    "image": "none"
+  },
+  {
+    "author": "",
+    "msgbox": "",
+    "timestamp": "0:13 &nbsp; 2021.3.15",
+    "image": "none"
+  },
+  {
+    "author": "asdf",
+    "msgbox": "dd",
+    "timestamp": "0:14 &nbsp; 2021.3.15",
+    "image": "\\uploads\\image-1615763640436.png"
   }
 ]

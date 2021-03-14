@@ -3,30 +3,80 @@ const socketio = require('socket.io');
 const http = require('http');
 const path = require('path');
 const fs = require("fs");
+const multer = require('multer');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'public/uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, 'image-' + Date.now() + path.extname(file.originalname));
+    }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
   let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
   data.forEach(function(obj) {
-    io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1");
+    io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
   });
   io.emit('loading', "1");
-    socket.on('chat',(msgbox, author) => {
-      let date_ob = new Date(Date.now());
-      let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
-      data.push({"author":author,"msgbox":msgbox,"timestamp":dateout});
-      jsonStr = JSON.stringify(data, null, 2);
-      fs.writeFile("data.json", jsonStr, err => {
-        if (err) {
-          console.log(`Data couldn't be saved! Error: ${err}`);
+  socket.on('chat',(msgbox, author) => {
+    let date_ob = new Date(Date.now());
+    let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
+    data.push({"author":author,"msgbox":msgbox,"timestamp":dateout});
+    jsonStr = JSON.stringify(data, null, 2);
+    fs.writeFile("data.json", jsonStr, err => {
+      if (err) {
+        console.log(`Data couldn't be saved! Error: ${err}`);
+      }
+    });
+    io.emit('chat', author, msgbox, dateout, "0");
+  });
+});
+
+app.post('/', (req, res) => {
+    let upload = multer({ storage: storage}).single('profile_pic');
+    upload(req, res, function(err) {
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
         }
-      });
-      io.emit('chat', author, msgbox, dateout, "0");
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+
+
+
+        let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
+        let date_ob = new Date(Date.now());
+        let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
+
+        if (!req.file) {
+          data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":"none"});
+          io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", "none");
+        } else {
+          let str = "/upload/"+req.file.path.substring(15);
+          data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":str});
+          io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", str);
+        }
+
+        jsonStr = JSON.stringify(data, null, 2);
+        fs.writeFile("data.json", jsonStr, err => {
+          if (err) {
+            console.log(`Data couldn't be saved! Error: ${err}`);
+          }
+        });
+
+
+        res.redirect('/');
     });
 });
 
