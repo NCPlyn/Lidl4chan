@@ -1,12 +1,35 @@
 <html>
   <main>
     <form>
-      <input type="text" id="author">
-      <input type="text" id="msgbox">
+      Jméno: <input type="text" id="author">
+      Zpráva: <input type="text" id="msgbox">
       <button type="button" id="send">Poslat</button>
     </form>
     <div id="chatbox"></div>
   </main>
+  <style>
+    .post {
+      background-color:#f0e0d6;
+      border: 2px solid #d9bfb7;
+      padding:10px;
+      display:table;
+      font-size:11pt;
+      min-width:200px;
+      font-family: arial;
+      margin-bottom:10px;
+      box-shadow: 3px 3px grey;
+    }
+    .who {
+      font-size:10pt;
+      border-bottom: 1px solid;
+      color: maroon;
+    }
+    .whoname {
+      color: #117743;
+      font-weight: bold;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="main.js"></script>
 </html>

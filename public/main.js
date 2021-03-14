@@ -12,7 +12,7 @@ send.addEventListener('click', function(e) {
 
 socket.on('chat', (author, msgbox, dateout, loading) => {
   if(loading == "0" || loading != load) {
-    chatbox.innerHTML += "Timestamp: "+dateout+" Author: " + author + " Message: " + msgbox + "<br>";
+    $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>"+author+" &nbsp; &nbsp;</span><span>"+dateout+"</span></div><blockquote>"+msgbox+"</blockquote></div>");
   }
 });
 
