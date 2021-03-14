@@ -9,6 +9,6 @@ send.addEventListener('click', function(e) {
         socket.emit('chat', msgbox.value, author.value);
 });
 
-socket.on('chat', (msgbox, author, dateout) => {
+socket.on('chat', (author, msgbox, dateout) => {
     chatbox.innerHTML += "Timestamp: "+dateout+" Author: " + author + " Message: " + msgbox + "<br>";
 });
