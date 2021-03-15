@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
 });
 
 app.post('/', (req, res) => {
-    let upload = multer({ storage: storage}).single('profile_pic');
+    let upload = multer({ storage: storage}).single('ffile');
     upload(req, res, function(err) {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
@@ -51,9 +51,9 @@ app.post('/', (req, res) => {
         }
         else if (err) {
             return res.send(err);
+        } else if (!req.body.author) {
+          return res.send("Fill out Author name");
         }
-
-
 
         let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
         let date_ob = new Date(Date.now());
@@ -63,7 +63,7 @@ app.post('/', (req, res) => {
           data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":"none"});
           io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", "none");
         } else {
-          let str = "/upload/"+req.file.path.substring(15);
+          let str = "/uploads/"+req.file.path.substring(15);
           data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":str});
           io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", str);
         }

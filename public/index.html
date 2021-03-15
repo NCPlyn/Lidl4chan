@@ -1,39 +1,27 @@
-<html>
-  <main>
-    <form method="POST" action="/" enctype="multipart/form-data">
-      Jméno: <input type="text" name="author">
-      Zpráva: <input type="text" name="msgbox">
-      <input type="file" name="profile_pic" />
-      <input type="submit" name="btn_upload_profile_pic" value="Upload" />
-    </form>
-    <div id="chatbox"></div>
-  </main>
-  <style>
-    .post {
-      background-color:#f0e0d6;
-      border: 2px solid #d9bfb7;
-      padding:10px;
-      display:table;
-      font-size:11pt;
-      min-width:200px;
-      font-family: arial;
-      margin-bottom:10px;
-      box-shadow: 3px 3px grey;
-    }
-    .who {
-      font-size:10pt;
-      border-bottom: 1px solid;
-      color: maroon;
-    }
-    .whoname {
-      color: #117743;
-      font-weight: bold;
-    }
-    img {
-      max-width:20%;
-    }
-  </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="main.js"></script>
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Lidl4chan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://www.lidl.cz/bundles/retail/images/favicon.png">
+  </head>
+  <body>
+    <main>
+      <p>Click on picture to enlarge it</p>
+      <div id="chatbox"></div>
+      <div id="sendform">
+        <form method="POST" action="/" enctype="multipart/form-data">
+          Jméno: <input type="text" name="author" id="name"><br>
+          Zpráva: <textarea rows="5" name="msgbox" id="msg"></textarea><br>
+          Obrázek: <input type="file" name="ffile"><br>
+          <input type="submit" name="btn_upload" value="Upload">
+        </form>
+      </div>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+  </body>
 </html>
