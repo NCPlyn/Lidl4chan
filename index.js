@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
 });
 
 app.post('/', (req, res) => {
-    let upload = multer({ storage: storage}).single('ffile');
+    let upload = multer({ storage: storage, fileFilter: imageFilter}).single('ffile');
     upload(req, res, function(err) {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
@@ -69,6 +69,16 @@ app.post('/', (req, res) => {
         res.redirect('/');
     });
 });
+
+const imageFilter = function(req, file, cb) {
+    // Accept images only
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+        req.fileValidationError = 'Only image files are allowed!';
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+exports.imageFilter = imageFilter;
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, function(){
