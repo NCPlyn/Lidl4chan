@@ -6,17 +6,19 @@ const chatbox = document.getElementById('chatbox');
 let load = "0";
 
 socket.on('chat', (author, msgbox, dateout, loading, image) => {
+  console.log(author+", "+msgbox+", "+dateout+", "+loading+", "+image)
   if(loading == "0" || loading != load && image == "none") {
+    console.log("without")
     $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>"+author+" &nbsp; &nbsp;</span><span>"+dateout+"</span></div><blockquote>"+msgbox+"</blockquote></div>");
-  }
-  if(loading == "0" || loading != load && image != "none") {
+  } else if(loading == "0" || loading != load && image != "none") {
+    console.log("with")
     let rando = Math.ceil(Math.random() * 50000);
     $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>"+author+" &nbsp; &nbsp;</span><span>"+dateout+"</span></div><blockquote>"+msgbox+"</blockquote><div class='imag' id='"+rando+"'><img src='"+image+"'></div></div>");
   }
 });
 
 socket.on('loading', loaded => {
-  load = loaded;
+  load = "1";
 });
 
 document.addEventListener('click',function(e){

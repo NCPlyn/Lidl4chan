@@ -24,20 +24,10 @@ io.on('connection', (socket) => {
   let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
   data.forEach(function(obj) {
     io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
+    console.log("sent old file")
   });
   io.emit('loading', "1");
-  socket.on('chat',(msgbox, author) => {
-    let date_ob = new Date(Date.now());
-    let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
-    data.push({"author":author,"msgbox":msgbox,"timestamp":dateout});
-    jsonStr = JSON.stringify(data, null, 2);
-    fs.writeFile("data.json", jsonStr, err => {
-      if (err) {
-        console.log(`Data couldn't be saved! Error: ${err}`);
-      }
-    });
-    io.emit('chat', author, msgbox, dateout, "0");
-  });
+  console.log("done sending")
 });
 
 app.post('/', (req, res) => {
@@ -51,7 +41,8 @@ app.post('/', (req, res) => {
         }
         else if (err) {
             return res.send(err);
-        } else if (!req.body.author) {
+        }
+        else if (!req.body.author) {
           return res.send("Fill out Author name");
         }
 
@@ -62,10 +53,12 @@ app.post('/', (req, res) => {
         if (!req.file) {
           data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":"none"});
           io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", "none");
+          console.log("no file")
         } else {
           let str = "/uploads/"+req.file.path.substring(15);
           data.push({"author":req.body.author,"msgbox":req.body.msgbox,"timestamp":dateout,"image":str});
           io.emit('chat', req.body.author, req.body.msgbox, dateout, "0", str);
+          console.log("yes file")
         }
 
         jsonStr = JSON.stringify(data, null, 2);
@@ -74,7 +67,6 @@ app.post('/', (req, res) => {
             console.log(`Data couldn't be saved! Error: ${err}`);
           }
         });
-
 
         res.redirect('/');
     });
