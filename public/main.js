@@ -6,7 +6,6 @@ const chatbox = document.getElementById('chatbox');
 let loaded = "0";
 
 socket.on('chat', (author, msgbox, dateout, loading, image) => {
-  console.log(author+", "+msgbox+", "+dateout+", "+loading+", "+image)
   if(loading == "0" || loading != loaded) {
     if(image == "none") {
       console.log("WITHOUTOUT IMAGE")
