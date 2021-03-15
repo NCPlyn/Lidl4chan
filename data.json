@@ -15,7 +15,7 @@
     "author": "asdf",
     "msgbox": "dd",
     "timestamp": "0:14 &nbsp; 2021.3.15",
-    "image": "\\uploads\\image-1615763640436.png"
+    "image": "/uploads/image-1615763640436.png"
   },
   {
     "author": "xd",
@@ -31,13 +31,13 @@
   },
   {
     "author": "já",
-    "msgbox": "Jako vypadá to good\r\n",
+    "msgbox": "Jako vypadá to good<br>",
     "timestamp": "10:22 &nbsp; 2021.3.15",
     "image": "none"
   },
   {
     "author": "kokos",
-    "msgbox": "ahoj\r\n",
+    "msgbox": "ahoj<br>",
     "timestamp": "10:22 &nbsp; 2021.3.15",
     "image": "none"
   },
@@ -61,7 +61,7 @@
   },
   {
     "author": "gfhf",
-    "msgbox": "fghfg\r\nfgh\r\nfgh",
+    "msgbox": "fghfg<br>fgh<br>fgh",
     "timestamp": "10:40 &nbsp; 2021.3.15",
     "image": "none"
   }
