@@ -29,6 +29,7 @@ io.on('connection', (socket) => {
 });
 
 app.post('/', (req, res) => {
+    console.log(req.connection.remoteAddress);
     let upload = multer({ storage: storage, fileFilter: imageFilter}).single('ffile');
     upload(req, res, function(err) {
         if (req.fileValidationError) {
