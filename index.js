@@ -21,11 +21,19 @@ const storage = multer.diskStorage({
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-  let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
-  data.forEach(function(obj) {
-    io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
+  socket.on('getboard', gotid => {
+    let boardtoget = "boards/"+gotid+".json";
+    if (fs.existsSync(boardtoget)) {
+      let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
+      data.forEach(function(obj) {
+        io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
+      });
+      io.emit('loading', "1");
+    } else {
+      io.emit('chat', "System", "Wrong board ID", "", "1", "none");
+      io.emit('loading', "1");
+    }
   });
-  io.emit('loading', "1");
 });
 
 app.post('/', (req, res) => {
@@ -45,31 +53,38 @@ app.post('/', (req, res) => {
           return res.send("Fill out Author name");
         }
 
-        let data = JSON.parse(fs.readFileSync("data.json", 'utf8'));
-        let date_ob = new Date(Date.now());
-        let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
+        let jsonfile = "boards/"+req.body.boardid+".json"
+        if(fs.existsSync(jsonfile)) {
+          let data = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
+          let date_ob = new Date(Date.now());
+          let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
 
-        let outmsg = req.body.msgbox.replace(/\r\n/g, "<br>");
+          let outmsg = req.body.msgbox.replace(/\r\n/g, "<br>");
 
-        if (!req.file) {
-          data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":"none"});
-          io.emit('chat', req.body.author, outmsg, dateout, "0", "none");
-        } else {
-          let str = "/uploads/"+req.file.path.substring(15);
-          data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":str});
-          io.emit('chat', req.body.author, outmsg, dateout, "0", str);
-        }
-
-        jsonStr = JSON.stringify(data, null, 2);
-        fs.writeFile("data.json", jsonStr, err => {
-          if (err) {
-            console.log(`Data couldn't be saved! Error: ${err}`);
+          if (!req.file) {
+            data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":"none"});
+            io.emit('chat', req.body.author, outmsg, dateout, "0", "none");
+          } else {
+            let str = "/uploads/"+req.file.path.substring(15);
+            data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":str});
+            io.emit('chat', req.body.author, outmsg, dateout, "0", str);
           }
-        });
 
-        res.redirect('/');
+          jsonStr = JSON.stringify(data, null, 2);
+          fs.writeFile(jsonfile, jsonStr, err => {
+            if (err) {
+              console.log(`Data couldn't be saved! Error: ${err}`);
+            }
+          });
+
+          res.redirect('/?id='+req.body.boardid);
+        } else {
+          return res.send("The board you are trying to post doesnt exist!");
+        }
     });
 });
+
+
 
 const imageFilter = function(req, file, cb) {
     // Accept images only

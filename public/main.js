@@ -3,15 +3,14 @@ const msgbox = document.getElementById('msgbox');
 const author = document.getElementById('author');
 const scrp = document.getElementById('scrp');
 const chatbox = document.getElementById('chatbox');
+const urlParams = new URLSearchParams(window.location.search)
 let loaded = "0";
 
 socket.on('chat', (author, msgbox, dateout, loading, image) => {
   if(loading == "0" || loading != loaded) {
     if(image == "none") {
-      console.log("WITHOUTOUT IMAGE")
       $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>"+author+" &nbsp; &nbsp;</span><span>"+dateout+"</span></div><blockquote>"+msgbox+"</blockquote></div>");
     } else {
-      console.log("WITH IMAGE")
       let rando = Math.ceil(Math.random() * 50000);
       $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>"+author+" &nbsp; &nbsp;</span><span>"+dateout+"</span></div><blockquote>"+msgbox+"</blockquote><div class='imag' id='"+rando+"'><img src='"+image+"'></div></div>");
     }
@@ -21,6 +20,10 @@ socket.on('chat', (author, msgbox, dateout, loading, image) => {
 socket.on('loading', load => {
   loaded = "1";
 });
+
+const gotid = urlParams.get('id')
+socket.emit('getboard', gotid);
+document.getElementById("formid").value = gotid;
 
 document.addEventListener('click',function(e){
     if(e.target && $(event.target).is('img')){
