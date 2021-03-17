@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const fs = require("fs");
 const multer = require('multer');
+const resizeOptimizeImages = require('resize-optimize-images');
 
 const app = express();
 const server = http.createServer(app);
@@ -72,7 +73,12 @@ app.post('/boards.html', (req, res) => {
         data.push({"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": "none"});
         io.emit('boardpost', req.body.author, outmsg, dateout, "0", "none");
       } else {
-        let str = "/uploads/" + req.file.path.substring(15);
+        let str = req.file.path.substring(15);
+        fs.copyFile("./public/uploads/" + str, "./public/uploads/thumb/" + str, (err) => {
+          if (err) throw err;
+          const options = {images: ["public/uploads/thumb/" + str], width: 200, quality: 90};
+          resizeOptimizeImages(options);
+        });
         data.push({"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": str});
         io.emit('boardpost', req.body.author, outmsg, dateout, "0", str);
       }

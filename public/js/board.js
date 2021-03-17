@@ -10,8 +10,7 @@ socket.on('boardpost', (author, msgbox, dateout, loading, image, useridback) => 
       if (image == "none") {
         $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + "</span></div><blockquote>" + msgbox + "</blockquote></div>");
       } else {
-        let rando = Math.ceil(Math.random() * 50000);
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + "</span></div><blockquote>" + msgbox + "</blockquote><div class='imag' id='" + rando + "'><img src='" + image + "'></div></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + "</span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
       }
     }
   }
@@ -30,11 +29,11 @@ document.getElementById("formid").value = gotid;
 
 document.addEventListener('click', function(e) { //listener to enlarge pictures, in future only change picture src to low res
   if (e.target && $(event.target).is('img')) {
-    let xd2 = document.getElementById(e.target.parentElement.id);
-    if (xd2.offsetWidth == 200) {
-      xd2.style.width = "100%";
+    let sourc = event.target.getAttribute("src")
+    if(sourc.includes("thumb")) {
+      event.target.src = "/uploads/" + sourc.substring(15);
     } else {
-      xd2.style.width = "200px";
+      event.target.src = "/uploads/thumb/" + sourc.substring(9);
     }
   }
 });

@@ -1,20 +1,14 @@
 [
   {
-    "boardid": "data",
+    "boardid": 29275,
     "name": "Hlavní board",
-    "desc": "To co je až moc obecné",
-    "image": "/uploads/image-1615799283215.png"
+    "desc": "Pro to co je až moc obecné",
+    "image": "/uploads/image-1615983350781.png"
   },
   {
-    "boardid": "xd",
-    "name": "xd board",
-    "desc": "lulw xD",
-    "image": "/uploads/image-1615936310980.jpg"
-  },
-  {
-    "boardid": 30067,
-    "name": "test",
-    "desc": "ahoj<br>nový řádek",
-    "image": "/uploads/image-1615939525538.png"
+    "boardid": 3553,
+    "name": "new board",
+    "desc": "test<br>nový řádek",
+    "image": "/uploads/image-1615983508845.png"
   }
 ]
