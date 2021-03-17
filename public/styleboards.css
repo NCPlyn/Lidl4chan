@@ -1,0 +1,40 @@
+.card-body {
+  background-color:#f0e0d6;
+  padding:10px;
+  display:table;
+  font-size:11pt;
+  font-family: arial;
+}
+.card-title {
+  font-size:large;
+  color: #117743;
+  font-weight: bold;
+}
+.card {
+  width: 260px;
+  border:1px solid rgba(0,0,0,.256) !important;
+}
+#msg {
+  width: 30%;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+main {
+  margin-top: 30px;
+  margin-left: 10px;
+}
+html,main {
+  background-color: #ffe;
+}
+#boardsbox {
+  padding-top: 3%;
+}
+input[type="submit"] {
+  margin-top:10px;
+}
+#createform {
+  margin-top:2%;
+}

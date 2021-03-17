@@ -2,27 +2,33 @@
 <html lang="cs">
   <head>
     <meta charset="utf-8">
-
     <title>Lidl4chan</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleboards.css">
     <link rel="icon" href="https://www.lidl.cz/bundles/retail/images/favicon.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   </head>
   <body>
     <main>
-      <p>Click on picture to enlarge it</p>
-      <div id="chatbox"></div>
-      <div id="sendform">
-        <form method="POST" action="/" enctype="multipart/form-data">
-          Jméno: <input type="text" name="author" id="name"><br>
-          Zpráva: <textarea rows="5" name="msgbox" id="msg"></textarea><br>
-          Obrázek: <input type="file" name="ffile"><br>
-          <input type="hidden" name="boardid" id="formid" value="">
-          <input type="submit" name="btn_upload" value="Upload">
-        </form>
+      <div class="container text-center">
+        <h1>Lidl4chan - skutečně nejlevnější</h1>
+        <h6 id="showform">Click to show/hide board create form</h6>
+        <div id="createform">
+          <form method="POST" action="/" enctype="multipart/form-data">
+            Název boardu:<br><input type="text" name="name" id="name"><br>
+            Stručný popis obsahu boardu:<br><textarea rows="2" name="desc" id="msg"></textarea><br>
+            Obrázek boardu:<br><input type="file" name="ffile"><br>
+            <input type="submit" name="btn_upload" value="Create">
+          </form>
+        </div>
+        <div class="row" id="boardsbox">
+        </div>
       </div>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="main.js"></script>
+    <script src="ind.js"></script>
   </body>
 </html>

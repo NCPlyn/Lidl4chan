@@ -21,6 +21,13 @@ const storage = multer.diskStorage({
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
+  socket.on('getmain', yes => {
+    let data = JSON.parse(fs.readFileSync("boards.json", 'utf8'));
+    data.forEach(function(obj) {
+      io.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image,"1");
+    });
+    io.emit('mainloading', "1");
+  });
   socket.on('getboard', gotid => {
     let boardtoget = "boards/"+gotid+".json";
     if (fs.existsSync(boardtoget)) {
@@ -36,7 +43,7 @@ io.on('connection', (socket) => {
   });
 });
 
-app.post('/', (req, res) => {
+app.post('/boards.html', (req, res) => {
     console.log(req.connection.remoteAddress);
     let upload = multer({ storage: storage, fileFilter: imageFilter}).single('ffile');
     upload(req, res, function(err) {
@@ -77,14 +84,61 @@ app.post('/', (req, res) => {
             }
           });
 
-          res.redirect('/?id='+req.body.boardid);
+          res.redirect('/boards.html?id='+req.body.boardid);
         } else {
           return res.send("The board you are trying to post doesnt exist!");
         }
     });
 });
 
+app.post('/', (req, res) => {
+    console.log(req.connection.remoteAddress);
+    let upload = multer({ storage: storage, fileFilter: imageFilter}).single('ffile');
+    upload(req, res, function(err) {
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+        else if (!req.body.name || !req.body.desc || !req.file) {
+          return res.send("Fill out all information! Even image!");
+        }
 
+        let data = JSON.parse(fs.readFileSync("boards.json", 'utf8'));
+
+        let outmsg = req.body.desc.replace(/\r\n/g, "<br>");
+
+        let rando = Math.ceil(Math.random() * 90000);
+        let str = "/uploads/"+req.file.path.substring(15);
+
+        data.push({"boardid":rando, "name":req.body.name, "desc":outmsg, "image":str});
+        io.emit("mainload", rando, req.body.name, outmsg, str);
+
+        jsonStr = JSON.stringify(data, null, 2);
+        fs.writeFile("boards.json", jsonStr, err => {
+          if (err) {
+            console.log(`Data couldn't be saved! Error: ${err}`);
+          }
+        });
+
+        let date_ob = new Date(Date.now());
+        let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
+        let newjson=[];
+        newjson.push({"author":"System","msgbox":"New board created","timestamp":dateout,"image":"none"});
+        let jsonStr2 = JSON.stringify(newjson, null, 2);
+        fs.writeFile("boards/"+rando+".json", jsonStr2, err => {
+          if (err) {
+            console.log(`Data couldn't be saved! Error: ${err}`);
+          }
+        });
+
+        res.redirect('/');
+    });
+});
 
 const imageFilter = function(req, file, cb) {
     // Accept images only
