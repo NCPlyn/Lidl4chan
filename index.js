@@ -21,24 +21,24 @@ const storage = multer.diskStorage({ //names for uploads
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-  socket.on('getmain', yes => { //signal to send boards from json file
+  socket.on('getmain', pageusrid => { //signal to send boards from json file
     let data = JSON.parse(fs.readFileSync("boards.json", 'utf8'));
     data.forEach(function(obj) {
-      io.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image, "1");
+      io.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image, "1", pageusrid);
     });
-    io.emit('mainloading', "1");
+    io.emit('mainloading', pageusrid);
   });
-  socket.on('getboard', gotid => { //signal to send post from specific board, load from json
+  socket.on('getboard', (gotid, pageusrid) => { //signal to send post from specific board, load from json
     let boardtoget = "boards/" + gotid + ".json";
     if (fs.existsSync(boardtoget)) {
       let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
       data.forEach(function(obj) {
-        io.emit('boardpost', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
+        io.emit('boardpost', obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid);
       });
-      io.emit('loading', "1");
+      io.emit('loading', pageusrid);
     } else {
-      io.emit('boardpost', "System", "Wrong board ID", "", "1", "none");
-      io.emit('loading', "1");
+      io.emit('boardpost', "System", "Wrong board ID", "", "1", "none", pageusrid);
+      io.emit('loading', "1", pageusrid);
     }
   });
 });
