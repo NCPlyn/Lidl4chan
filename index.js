@@ -140,7 +140,7 @@ app.post('/', (req, res) => {
   });
 });
 
-const imageFilter = function(req, file, cb) { // accept images only (!!!!need to check filesize too)
+const imageFilter = function(req, file, cb) { // accept images only
   if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = 'Only image files are allowed!';
     return cb(new Error('Only image files are allowed!'), false);

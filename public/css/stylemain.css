@@ -13,9 +13,10 @@
 .card {
   width: 260px;
   border:1px solid rgba(0,0,0,.256) !important;
+  margin-bottom: 2%;
 }
 #msg {
-  width: 30%;
+  width: 90%;
 }
 img {
   max-width: 100%;
@@ -34,7 +35,12 @@ html,main {
 }
 input[type="submit"] {
   margin-top:10px;
+  margin-bottom:10px;
 }
 #createform {
+  margin: auto;
   margin-top:2%;
+  border: 1px solid;
+  width: 350px;
+  background-color:#f0e0d6;
 }
