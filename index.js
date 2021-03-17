@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ //names for uploads
     destination: function(req, file, cb) {
         cb(null, 'public/uploads/');
     },
@@ -21,23 +21,23 @@ const storage = multer.diskStorage({
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-  socket.on('getmain', yes => {
+  socket.on('getmain', yes => { //signal to send boards from json file
     let data = JSON.parse(fs.readFileSync("boards.json", 'utf8'));
     data.forEach(function(obj) {
       io.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image,"1");
     });
     io.emit('mainloading', "1");
   });
-  socket.on('getboard', gotid => {
+  socket.on('getboard', gotid => { //signal to send post from specific board, load from json
     let boardtoget = "boards/"+gotid+".json";
     if (fs.existsSync(boardtoget)) {
       let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
       data.forEach(function(obj) {
-        io.emit('chat', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
+        io.emit('boardpost', obj.author, obj.msgbox, obj.timestamp, "1", obj.image);
       });
       io.emit('loading', "1");
     } else {
-      io.emit('chat', "System", "Wrong board ID", "", "1", "none");
+      io.emit('boardpost', "System", "Wrong board ID", "", "1", "none");
       io.emit('loading', "1");
     }
   });
@@ -70,11 +70,11 @@ app.post('/boards.html', (req, res) => {
 
           if (!req.file) {
             data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":"none"});
-            io.emit('chat', req.body.author, outmsg, dateout, "0", "none");
+            io.emit('boardpost', req.body.author, outmsg, dateout, "0", "none");
           } else {
             let str = "/uploads/"+req.file.path.substring(15);
             data.push({"author":req.body.author,"msgbox":outmsg,"timestamp":dateout,"image":str});
-            io.emit('chat', req.body.author, outmsg, dateout, "0", str);
+            io.emit('boardpost', req.body.author, outmsg, dateout, "0", str);
           }
 
           jsonStr = JSON.stringify(data, null, 2);
@@ -140,15 +140,13 @@ app.post('/', (req, res) => {
     });
 });
 
-const imageFilter = function(req, file, cb) {
-    // Accept images only
+const imageFilter = function(req, file, cb) { // accept images only (!!!!need to check filesize too)
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
         req.fileValidationError = 'Only image files are allowed!';
         return cb(new Error('Only image files are allowed!'), false);
     }
     cb(null, true);
 };
-exports.imageFilter = imageFilter;
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, function(){
