@@ -14,7 +14,7 @@ socket.on('mainload', (boardid, name, desc, image, loading, useridback) => { //g
   }
 });
 
-socket.on('mainloading', useridback => { //get loaded signal (!!!!!!should compare userID from cookies to make sure we are not responding to other loader)
+socket.on('mainloading', useridback => { //get loaded signal
   if (useridback == userpagenum) {
     loaded = "1";
   }

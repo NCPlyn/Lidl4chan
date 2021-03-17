@@ -1,5 +1,6 @@
 const socket = io();
 const urlParams = new URLSearchParams(window.location.search)
+const chkremem = document.getElementById("remember");
 let loaded = "0";
 let userpagenum = Math.ceil(Math.random() * 20000);
 
@@ -37,3 +38,35 @@ document.addEventListener('click', function(e) { //listener to enlarge pictures,
     }
   }
 });
+
+chkremem.addEventListener('change', (event) => { //if remember is checked, create cookie, otherwise delete it
+  if (event.currentTarget.checked) {
+    var d = new Date();
+    d.setTime(d.getTime() + (30*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = "name=" + document.getElementById("name").value + ";" + expires + ";path=/";
+  } else {
+    document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+});
+
+function getCookie(cname) { //funciton to get local cookie
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+let username = getCookie("name");
+if (username != "") {
+  document.getElementById("name").value = username;
+  chkremem.checked = true;
+}
