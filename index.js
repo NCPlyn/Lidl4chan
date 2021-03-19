@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     if (fs.existsSync(boardtoget)) {
       let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
       data.forEach(function(obj) {
-        io.emit('boardpost', obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid);
+        io.emit('boardpost', obj.id, obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid);
       });
       io.emit('loading', pageusrid);
     } else {
@@ -110,10 +110,11 @@ app.post('/boards.html', (req, res) => {
         let dateout = date_ob.getHours() + ":" + date_ob.getMinutes() + " &nbsp; " + date_ob.getFullYear() + "." + (date_ob.getMonth() + 1) + "." + date_ob.getDate();
 
         let outmsg = req.body.msgbox.replace(/\r\n/g, "<br>");
+        let genid = Math.floor(Math.random()*899999+100000);
 
         if (!req.file) {
-          data.push({"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": "none"});
-          io.emit('boardpost', req.body.author, outmsg, dateout, "0", "none");
+          data.push({"id":genid,"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": "none"});
+          io.emit('boardpost', genid, req.body.author, outmsg, dateout, "0", "none");
         } else {
           let str = req.file.path.substring(15);
           fs.copyFile("./public/uploads/" + str, "./public/uploads/thumb/" + str, (err) => {
@@ -121,8 +122,8 @@ app.post('/boards.html', (req, res) => {
             const options = {images: ["public/uploads/thumb/" + str], width: 200, quality: 90};
             resizeOptimizeImages(options);
           });
-          data.push({"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": str});
-          io.emit('boardpost', req.body.author, outmsg, dateout, "0", str);
+          data.push({"id":genid,"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": str});
+          io.emit('boardpost', genid, req.body.author, outmsg, dateout, "0", str);
         }
 
         jsonStr = JSON.stringify(data, null, 2);

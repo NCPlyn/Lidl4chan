@@ -4,13 +4,24 @@ const chkremem = document.getElementById("remember");
 let loaded = "0";
 let userpagenum = Math.ceil(Math.random() * 20000);
 
-socket.on('boardpost', (author, msgbox, dateout, loading, image, useridback) => { //listen to incoming data, chech if we are loading, check if image is present, add post to html (probs create ID for image)
+socket.on('boardpost', (postid, author, msgbox, dateout, loading, image, useridback) => { //listen to incoming data, chech if we are loading, check if image is present, add post to html (probs create ID for image)
   if (useridback == userpagenum) { //checking if we are loading correct data
     if (loading == "0" || loading != loaded) {
+      let outtext = msgbox;
+      let count = (msgbox.match(/\>\>/g) || []).length; //get number of tags
+      if(count != 0) {
+        for(i = 0; i < count; i++) { //for loop for replies
+          let tst = outtext.indexOf(">>");
+          let aid = outtext.slice(tst+2, tst+8);
+          outtext = outtext.replace('\>\>'+aid, '');
+          msgbox = msgbox.replace('\>\>'+aid, "<a href='#"+aid+"'>\>\>"+aid+"</a>");
+          document.getElementById(aid).innerHTML += "<a href='#"+postid+"'> \>"+postid+"</a>"
+        }
+      }
       if (image == "none") {
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + "</span></div><blockquote>" + msgbox + "</blockquote></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote></div>");
       } else {
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + "</span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " "+postid+"</span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
       }
     }
   }
@@ -22,12 +33,41 @@ socket.on('loading', useridback => { //get loaded signal
   }
 });
 
-
 const gotid = urlParams.get('id') //get ID from url and ask nodejs to send data
 socket.emit('getboard', gotid, userpagenum);
 document.getElementById("formid").value = gotid;
 
-document.addEventListener('click', function(e) { //listener to enlarge pictures, in future only change picture src to low res
+document.addEventListener('click', function(e) { //listener to add replies
+  if (e.target && $(event.target).is('span') && e.target.id.length == 6) {
+    document.getElementById("msg").value += ">>"+e.target.id;
+  }
+});
+
+document.addEventListener('mouseover', function(e) { //too lazy to do anything other rn than change color using JS
+  if (e.target && $(event.target).is('span') && e.target.id.length == 6) {
+    e.target.style.color = "red";
+  }
+});
+document.addEventListener('mouseout', function(e) { //too lazy to do anything other rn than change color using JS
+  if (e.target && $(event.target).is('span') && e.target.id.length == 6) {
+    e.target.style.color = "maroon";
+  }
+});
+
+document.addEventListener('mouseover', function(e) { //too lazy to do anything other rn than change color using JS
+  if (e.target && $(event.target).is('a') && e.target.getAttribute("href").length == 7) {
+    let toid = e.target.getAttribute("href").substring(1);
+    document.getElementById(toid).parentElement.parentNode.style.backgroundColor = "#f0c0b0";
+  }
+});
+document.addEventListener('mouseout', function(e) { //too lazy to do anything other rn than change color using JS
+  if (e.target && $(event.target).is('a') && e.target.getAttribute("href").length == 7) {
+    let toid = e.target.getAttribute("href").substring(1);
+    document.getElementById(toid).parentElement.parentNode.style.backgroundColor = "#f0e0d6";
+  }
+});
+
+document.addEventListener('click', function(e) { //listener to enlarge pictures
   if (e.target && $(event.target).is('img')) {
     let sourc = event.target.getAttribute("src")
     if(sourc.includes("thumb")) {

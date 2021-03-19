@@ -1,26 +1,72 @@
 [
   {
+    "id": 123456,
     "author": "anonym",
     "msgbox": "ahoooooj moreeeeeee žaneta",
     "timestamp": "22:55 &nbsp; 2021.3.14",
     "image": "none"
   },
   {
+    "id": 321654,
     "author": "sdf",
     "msgbox": "sdfsdf",
     "timestamp": "0:11 &nbsp; 2021.3.15",
     "image": "none"
   },
   {
+    "id": 987654,
     "author": "xd",
     "msgbox": " eee more",
     "timestamp": "0:13 &nbsp; 2021.3.15",
     "image": "none"
   },
   {
+    "id": 741258,
     "author": "ahoj",
     "msgbox": "xd",
     "timestamp": "13:18 &nbsp; 2021.3.17",
     "image": "image-1615983484655.jpg"
+  },
+  {
+    "id": 403209,
+    "author": "Random",
+    "msgbox": "fdtgdhfgh",
+    "timestamp": "20:7 &nbsp; 2021.3.19",
+    "image": "none"
+  },
+  {
+    "id": 262356,
+    "author": "Random",
+    "msgbox": ">>123456 <br> idk co to má znamet >>321654",
+    "timestamp": "20:7 &nbsp; 2021.3.19",
+    "image": "none"
+  },
+  {
+    "id": 329816,
+    "author": "Random",
+    "msgbox": "teste",
+    "timestamp": "20:9 &nbsp; 2021.3.19",
+    "image": "none"
+  },
+  {
+    "id": 395569,
+    "author": "Random",
+    "msgbox": "sfasfgsdf >>123456",
+    "timestamp": "20:22 &nbsp; 2021.3.19",
+    "image": "none"
+  },
+  {
+    "id": 639990,
+    "author": "Random",
+    "msgbox": "sadadss",
+    "timestamp": "20:23 &nbsp; 2021.3.19",
+    "image": "none"
+  },
+  {
+    "id": 607114,
+    "author": "Random",
+    "msgbox": ">>987654<br>xD",
+    "timestamp": "23:0 &nbsp; 2021.3.19",
+    "image": "none"
   }
 ]
