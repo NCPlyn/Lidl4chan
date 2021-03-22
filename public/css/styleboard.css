@@ -13,10 +13,15 @@
   font-size:10pt;
   border-bottom: 1px solid;
   color: maroon;
+  margin-bottom:5px;
 }
 .whoname {
   color: #117743;
   font-weight: bold;
+}
+.imga {
+  margin-bottom: 2px;
+  font-size:10pt;
 }
 #chatbox {
   width: 80%;

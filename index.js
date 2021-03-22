@@ -34,7 +34,14 @@ io.on('connection', (socket) => {
     if (fs.existsSync(boardtoget)) {
       let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
       data.forEach(function(obj) {
-        io.emit('boardpost', obj.id, obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid);
+        let imginfo = "none";
+        if(obj.image != "none") {
+          let filepath = "public/uploads/"+obj.image;
+          if (fs.existsSync(filepath)) {
+            imginfo = "("+(fs.statSync(filepath).size/(1024*1024)).toFixed(2)+"MB)";
+          }
+        }
+        io.emit('boardpost', obj.id, obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid, imginfo);
       });
       io.emit('loading', pageusrid);
     } else {
@@ -88,13 +95,13 @@ app.post('/boards.html', (req, res) => {
   }
 
   if(conti) {
-    let upload = multer({storage: storage, limits: {fileSize: 8 * 1024 * 1024}, fileFilter: imageFilter}).single('ffile');
+    let upload = multer({storage: storage, limits: {fileSize: 20 * 1024 * 1024}, fileFilter: imageFilter}).single('ffile');
     upload(req, res, function(err) {
       if (req.fileValidationError) {
         return res.send(req.fileValidationError);
       } else if (err instanceof multer.MulterError) {
         if (err.code == 'LIMIT_FILE_SIZE') {
-          return res.send("File Size is too large. Allowed file size is 8MB");
+          return res.send("File Size is too large. Allowed file size is 20MB");
         }
         return res.send(err);
       } else if (err) {
@@ -117,11 +124,14 @@ app.post('/boards.html', (req, res) => {
           io.emit('boardpost', genid, req.body.author, outmsg, dateout, "0", "none");
         } else {
           let str = req.file.path.substring(15);
-          fs.copyFile("./public/uploads/" + str, "./public/uploads/thumb/" + str, (err) => {
-            if (err) throw err;
-            const options = {images: ["public/uploads/thumb/" + str], width: 200, quality: 90};
-            resizeOptimizeImages(options);
-          });
+          let imgext = str.split('.').pop();
+          if(imgext == "jpg" || imgext == "JPG" || imgext == "jpeg" || imgext == "JPEG" || imgext == "png" || imgext == "PNG" || imgext == "gif" || imgext == "GIF") {
+            fs.copyFile("./public/uploads/" + str, "./public/uploads/thumb/" + str, (err) => {
+              if (err) throw err;
+              const options = {images: ["public/uploads/thumb/" + str], width: 200, quality: 90};
+              resizeOptimizeImages(options);
+            });
+          }
           data.push({"id":genid,"author": req.body.author,"msgbox": outmsg,"timestamp": dateout,"image": str});
           io.emit('boardpost', genid, req.body.author, outmsg, dateout, "0", str);
         }

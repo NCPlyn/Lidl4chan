@@ -4,7 +4,7 @@ const chkremem = document.getElementById("remember");
 let loaded = "0";
 let userpagenum = Math.ceil(Math.random() * 20000);
 
-socket.on('boardpost', (postid, author, msgbox, dateout, loading, image, useridback) => { //listen to incoming data, chech if we are loading, check if image is present, add post to html (probs create ID for image)
+socket.on('boardpost', (postid, author, msgbox, dateout, loading, image, useridback, imginfo) => { //listen to incoming data, chech if we are loading, check if image is present, add post to html (probs create ID for image)
   if (useridback == userpagenum) { //checking if we are loading correct data
     if (loading == "0" || loading != loaded) {
       let outtext = msgbox;
@@ -22,9 +22,9 @@ socket.on('boardpost', (postid, author, msgbox, dateout, loading, image, useridb
       if (image == "none") {
         $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote></div>");
       } else if(imgext == "webm" || imgext == "mp4") {
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote><video width='320' controls><source src='/uploads/" + image + "'></video></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><div class='imga'><a href='/uploads/" + image + "'>"+image+" </a>"+imginfo+"<br></div><video width='320' controls><source src='/uploads/" + image + "'></video><blockquote>" + msgbox + "</blockquote></div>");
       } else {
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><div class='imga'><a href='/uploads/" + image + "'>"+image+" </a>"+imginfo+"<br></div><img src='/uploads/thumb/" + image + "'><blockquote>" + msgbox + "</blockquote></div>");
       }
     }
   }
