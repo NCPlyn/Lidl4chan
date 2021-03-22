@@ -15,7 +15,7 @@ const storage = multer.diskStorage({ //names for uploads
     cb(null, 'public/uploads/');
   },
   filename: function(req, file, cb) {
-    cb(null, 'image-' + Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
       });
       io.emit('loading', pageusrid);
     } else {
-      io.emit('boardpost', "System", "Wrong board ID", "", "1", "none", pageusrid);
+      io.emit('boardpost', "null", "System", "Wrong board ID", "", "1", "none", pageusrid);
       io.emit('loading', "1", pageusrid);
     }
   });
@@ -234,9 +234,9 @@ app.post('/', (req, res) => {
 });
 
 const imageFilter = function(req, file, cb) { // accept images only
-  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-    req.fileValidationError = 'Only image files are allowed!';
-    return cb(new Error('Only image files are allowed!'), false);
+  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF|webm|WEBM|mp4|MP4)$/)) {
+    req.fileValidationError = 'Only image and mp4/webm files are allowed!';
+    return cb(new Error('Only image and mp4/webm files are allowed!'), false);
   }
   cb(null, true);
 };

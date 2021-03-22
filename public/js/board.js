@@ -18,10 +18,13 @@ socket.on('boardpost', (postid, author, msgbox, dateout, loading, image, useridb
           document.getElementById(aid).innerHTML += "<a href='#"+postid+"'> \>"+postid+"</a>"
         }
       }
+      let imgext = image.split('.').pop();
       if (image == "none") {
         $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote></div>");
+      } else if(imgext == "webm" || imgext == "mp4") {
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote><video width='320' controls><source src='/uploads/" + image + "'></video></div>");
       } else {
-        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " "+postid+"</span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
+        $("#chatbox").prepend("<div class='post'><div class='who'><span class='whoname'>" + author + " &nbsp; &nbsp;</span><span>" + dateout + " &nbsp; </span><span id="+postid+">#"+postid+" ▶ </span></div><blockquote>" + msgbox + "</blockquote><img src='/uploads/thumb/" + image + "'></div>");
       }
     }
   }
