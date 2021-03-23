@@ -2,7 +2,11 @@ const socket = io();
 const urlParams = new URLSearchParams(window.location.search)
 const chkremem = document.getElementById("remember");
 
+<<<<<<< HEAD
 socket.on('boardpost', (postid, author, msgbox, dateout, image, imginfo) => { //listen to incoming data, check if image is present, add post to html (probs create ID for image)
+=======
+socket.on('boardpost', (postid, author, msgbox, dateout, image, imginfo) => { //listen to incoming data, chech if we are loading, check if image is present, add post to html (probs create ID for image)
+>>>>>>> 6e1bd6d3a2a1a40e3fadf624301aa9660bbddc62
   let outtext = msgbox;
   let count = (msgbox.match(/\>\>/g) || []).length; //get number of tags
   if (count != 0) {
