@@ -22,14 +22,13 @@ const storage = multer.diskStorage({ //names for uploads
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-  socket.on('getmain', pageusrid => { //signal to send boards from json file
+  socket.on('getmain', function() { //signal to send boards from json file
     let data = JSON.parse(fs.readFileSync("boards.json", 'utf8'));
     data.forEach(function(obj) {
-      io.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image, "1", pageusrid);
+      socket.emit('mainload', obj.boardid, obj.name, obj.desc, obj.image);
     });
-    io.emit('mainloading', pageusrid);
   });
-  socket.on('getboard', (gotid, pageusrid) => { //signal to send post from specific board, load from json
+  socket.on('getboard', gotid => { //signal to send post from specific board, load from json
     let boardtoget = "boards/" + gotid + ".json";
     if (fs.existsSync(boardtoget)) {
       let data = JSON.parse(fs.readFileSync(boardtoget, 'utf8'));
@@ -41,12 +40,10 @@ io.on('connection', (socket) => {
             imginfo = "("+(fs.statSync(filepath).size/(1024*1024)).toFixed(2)+"MB)";
           }
         }
-        io.emit('boardpost', obj.id, obj.author, obj.msgbox, obj.timestamp, "1", obj.image, pageusrid, imginfo);
+        socket.emit('boardpost', obj.id, obj.author, obj.msgbox, obj.timestamp, obj.image, imginfo);
       });
-      io.emit('loading', pageusrid);
     } else {
-      io.emit('boardpost', "null", "System", "Wrong board ID", "", "1", "none", pageusrid);
-      io.emit('loading', "1", pageusrid);
+      socket.emit('boardpost', "null", "System", "Wrong board ID", "", "none");
     }
   });
 });
